@@ -3,31 +3,57 @@ package com.example.madpractical5_21012022037
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.content.Intent
-import android.view.View
+import android.widget.TextView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.example.madpractical5_21012022037.MediaService
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var playbtn : FloatingActionButton
-    private lateinit var stopbtn : FloatingActionButton
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        val btnPlay: FloatingActionButton =findViewById(R.id.btn_play)
+        val btnStop:FloatingActionButton=findViewById(R.id.btn_stop)
+        val btnNext:FloatingActionButton=findViewById(R.id.btn_next)
+        val btnPrevious:FloatingActionButton=findViewById(R.id.btn_previous)
 
-        playbtn = findViewById(R.id.btn_play)
-        playbtn.setOnClickListener(View.OnClickListener {
+        val txtSong: TextView =findViewById(R.id.song_text)
+        txtSong.text="Pause song"
+        var i=0;
+        btnPlay.setOnClickListener {
+            txtSong.text="Now Song Is Playing"
             play()
-        })
+            if(i==0)
+            {
+                btnPlay.setImageResource(android.R.drawable.ic_media_pause)
+                i=1
+            }
+            else{
+                btnPlay.setImageResource(android.R.drawable.ic_media_play)
+                i=0
+            }
 
-        stopbtn = findViewById(R.id.btn_stop)
-        stopbtn.setOnClickListener(View.OnClickListener {
+        }
+        btnStop.setOnClickListener {
+            txtSong.text="Pause song"
             stop()
-        })
+            if(i==1)
+            {
+                btnPlay.setImageResource(android.R.drawable.ic_media_play)
+                i=0
+            }
+        }
+
+
     }
-    private fun play(){
-        Intent(applicationContext, MediaService::class.java).putExtra(MediaService.DATA_KEY,MediaService.DATA_VALUE).apply { startService(this) }
+    fun play()
+    {
+        Intent(applicationContext,MyService::class.java).putExtra(MyService.DATA_KEY,MyService.DATA_VALUE).apply {
+            startService(this)
+        }
     }
-    private fun stop(){
-        Intent(applicationContext,MediaService::class.java).apply { stopService(this) }
+    fun stop()
+    {
+        Intent(applicationContext,MyService::class.java).apply {
+            stopService(this)
+        }
     }
 }
